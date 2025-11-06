@@ -16,11 +16,11 @@ resources/
 │   ├── rust.json
 │   └── zig.json
 ├── themes/              # Color themes
-│   ├── dark.nino
-│   ├── light.nino
-│   ├── monokai.nino
-│   ├── ms-dos.nino
-│   └── solarized.nino
+│   ├── dark.theme
+│   ├── light.theme
+│   ├── monokai.theme
+│   ├── ms-dos.theme
+│   └── solarized.theme
 └── bundle.c             # Resource bundling (for compilation)
 ```
 
@@ -57,11 +57,11 @@ The `themes/` folder contains example color themes that you can use to customize
 
 ### Available Themes
 
-* **dark.nino** - Dark color scheme
-* **light.nino** - Light color scheme  
-* **monokai.nino** - Popular Monokai theme
-* **ms-dos.nino** - Retro MS-DOS style
-* **solarized.nino** - Solarized color palette
+* **dark.theme** - Dark color scheme
+* **light.theme** - Light color scheme  
+* **monokai.theme** - Popular Monokai theme
+* **ms-dos.theme** - Retro MS-DOS style
+* **solarized.theme** - Solarized color palette
 
 ### Installing Themes
 
@@ -75,17 +75,17 @@ Copy theme files to your configuration directory:
 To apply a theme:
 
 1. Press `Ctrl+P` to open the command prompt
-2. Type: `exec <theme-name>.nino`
+2. Type: `exec <theme-name>.theme`
 3. Press `Enter`
 
 **Examples:**
 
 ```bash
 # Apply dark theme
-exec dark.nino
+exec dark.theme
 
 # Apply solarized theme
-exec solarized.nino
+exec solarized.theme
 ```
 
 ### Creating Custom Themes
@@ -95,7 +95,7 @@ Theme files use configuration syntax to define colors and styles. You can modify
 **Example theme structure:**
 
 ```bash
-# Color definitions (see solarized.nino for format)
+# Color definitions (see solarized.theme for format)
 color bg 002b36
 color top.fg cccccc
 color top.bg 004852
@@ -134,8 +134,8 @@ User configuration files and custom resources should be placed in:
 ~/.lex/                 (Windows)
 ├── syntax/             # Custom syntax files
 │   └── mylang.json
-├── dark.nino           # Custom theme
-├── light.nino          # Custom theme
+├── dark.theme           # Custom theme
+├── light.theme          # Custom theme
 └── config              # Main configuration file
 ```
 
@@ -149,4 +149,4 @@ User configuration files and custom resources should be placed in:
 
 ## Note
 
-The `.nino` extension for theme files is maintained for compatibility with the original nino project that Lex is based on.
+The `.theme` extension for theme files is maintained for compatibility with the original nino project that Lex is based on.

@@ -90,4 +90,4 @@ When color code is `000000` it will be transparent.
 | `hl.trailing` | `ff6464` |
 
 ## Example
-An [example](example.ninorc) of `ninorc`.
+An [example](example.themerc) of `ninorc`.

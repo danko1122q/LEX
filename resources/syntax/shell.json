@@ -1,0 +1,73 @@
+{
+    "name": "Shell",
+    "extensions": [
+        ".sh",
+        ".bash",
+        ".zsh"
+    ],
+    "comment": "#",
+    "multiline-comment": [
+        ": '",
+        "'"
+    ],
+    "keywords1": [
+        "break",
+        "case",
+        "continue",
+        "do",
+        "done",
+        "elif",
+        "else",
+        "esac",
+        "fi",
+        "for",
+        "function",
+        "if",
+        "in",
+        "return",
+        "select",
+        "then",
+        "time",
+        "until",
+        "while"
+    ],
+    "keywords2": [
+        "alias",
+        "export",
+        "local",
+        "readonly",
+        "declare",
+        "typeset",
+        "unset",
+        "shift",
+        "source",
+        "eval",
+        "exec",
+        "exit",
+        "trap",
+        "set",
+        "unalias"
+    ],
+    "keywords3": [
+        "true",
+        "false",
+        "echo",
+        "printf",
+        "read",
+        "test",
+        "cd",
+        "pwd",
+        "ls",
+        "cp",
+        "mv",
+        "rm",
+        "mkdir",
+        "cat",
+        "grep",
+        "sed",
+        "awk",
+        "find",
+        "chmod",
+        "chown"
+    ]
+}

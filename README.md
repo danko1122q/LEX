@@ -144,57 +144,57 @@ set helpinfo 0
 
 * **CMake not found:** Install CMake using your package manager
   ```bash
-  # Debian/Ubuntu
-  sudo apt install cmake
-  
-  # Fedora/RHEL
-  sudo dnf install cmake
-  
-  # Arch Linux
-  sudo pacman -S cmake
-  ```
+    # Debian/Ubuntu
+      sudo apt install cmake
+        
+          # Fedora/RHEL
+            sudo dnf install cmake
+              
+                # Arch Linux
+                  sudo pacman -S cmake
+                    ```
 
-* **Permission denied during install:** Make sure to use `sudo` for the install command
+                    * **Permission denied during install:** Make sure to use `sudo` for the install command
 
-* **Build fails:** Ensure you have a C compiler installed
-  ```bash
-  # Install GCC
-  sudo apt install build-essential  # Debian/Ubuntu
-  sudo dnf install gcc              # Fedora/RHEL
-  ```
+                    * **Build fails:** Ensure you have a C compiler installed
+                      ```bash
+                        # Install GCC
+                          sudo apt install build-essential  # Debian/Ubuntu
+                            sudo dnf install gcc              # Fedora/RHEL
+                              ```
 
-### Uninstallation Issues
+                              ### Uninstallation Issues
 
-* **install_manifest.txt not found:** This file is created during installation. If it's missing, you may need to manually remove the executable:
-  ```bash
-  sudo rm /usr/local/bin/lex
-  ```
+                              * **install_manifest.txt not found:** This file is created during installation. If it's missing, you may need to manually remove the executable:
+                                ```bash
+                                  sudo rm /usr/local/bin/lex
+                                    ```
 
-* **Permission denied:** Remember to use `sudo` for uninstall operations
+                                    * **Permission denied:** Remember to use `sudo` for uninstall operations
 
----
+                                    ---
 
-## 📜 License
+                                    ## 📜 License
 
-Lex is distributed under a **Modified MIT License (Non-Commercial)**. You are free to **use, modify, and fork** this project for personal or educational purposes.
+                                    Lex is distributed under a **Modified MIT License (Non-Commercial)**. You are free to **use, modify, and fork** this project for personal or educational purposes.
 
-Commercial redistribution or resale is **not allowed** without written permission from the author.
+                                    Commercial redistribution or resale is **not allowed** without written permission from the author.
 
-> © 2025 **danko1122q** — All rights reserved.  
-> See the [LICENSE](LICENSE) file for full details.
+                                    > © 2025 **danko1122q** — All rights reserved.  
+                                    > See the [LICENSE](LICENSE) file for full details.
 
----
+                                    ---
 
-## 🙏 Acknowledgments
+                                    ## 🙏 Acknowledgments
 
-* **GNU Nano** — for inspiring the simplicity and interface design
-* **Open Source Community** — for tools, libraries, and continuous support
-* **Contributors** — who help improve and maintain the project
+                                    * **GNU Nano** — for inspiring the simplicity and interface design
+                                    * **Open Source Community** — for tools, libraries, and continuous support
+                                    * **Contributors** — who help improve and maintain the project
 
----
+                                    ---
 
-## 🔗 Links
+                                    ## 🔗 Links
 
-* **Repository:** [github.com/danko1122q/lex](https://github.com/danko1122q/lex)
-* **Issues:** [Report a bug or request a feature](https://github.com/danko1122q/lex/issues)
-* **Discussions:** [Join the community](https://github.com/danko1122q/lex/discussions
+                                    * **Repository:** [github.com/danko1122q/lex](https://github.com/danko1122q/lex)
+                                    * **Issues:** [Report a bug or request a feature](https://github.com/danko1122q/lex/issues)
+                                    * **Discussions:** [Join the community](https://github.com/danko1122q/LEX/discussions

@@ -1,0 +1,21 @@
+# cmake/uninstall.cmake.in
+# Uninstall script for CMake-generated files
+
+if (NOT EXISTS "@CMAKE_INSTALL_MANIFEST@")
+    message(FATAL_ERROR "Cannot find install manifest: @CMAKE_INSTALL_MANIFEST@")
+endif()
+
+file(READ "@CMAKE_INSTALL_MANIFEST@" files)
+string(REGEX REPLACE "\n" ";" files "${files}")
+
+message(STATUS "Removing installed files...")
+foreach (file ${files})
+    message(STATUS "Uninstalling: $ENV{DESTDIR}${file}")
+    if (EXISTS "$ENV{DESTDIR}${file}")
+        file(REMOVE "$ENV{DESTDIR}${file}")
+    endif()
+endforeach(file)
+
+# Hapus file install_manifest.txt setelah uninstall berhasil
+message(STATUS "Removing install manifest: @CMAKE_INSTALL_MANIFEST@")
+file(REMOVE "@CMAKE_INSTALL_MANIFEST@")

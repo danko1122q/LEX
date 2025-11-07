@@ -1,5 +1,6 @@
 {
-  "extensions": [".md", ".markdown"],
+  "name": "markdown",
+  "extensions": [".md", ".markdown", "README", "README.md"],
   "rules": [
     {
       "pattern": "^---[\\s\\S]*?---$",

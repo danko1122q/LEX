@@ -1,5 +1,5 @@
 # =========================
-#  Lex Project .gitignore
+#  General .gitignore
 # =========================
 
 # Build artifacts
@@ -9,6 +9,10 @@ cmake-build-*/
 bin/
 obj/
 out/
+target/        # Untuk proyek Maven/Gradle
+dist/          # Distribusi hasil build
+*.tar.gz
+*.zip
 
 # Compiled objects, libraries, and executables
 *.o
@@ -17,67 +21,43 @@ out/
 *.exe
 *.dll
 *.dylib
+*.class        # Java bytecode
+*.jar
+*.war
 
-# CMake generated files
-CMakeCache.txt
-CMakeFiles/
-Makefile
-cmake_install.cmake
-install_manifest.txt
-Testing/
-CTestTestfile.cmake
-compile_commands.json
-compile_flags.txt
-
-# Code generation and resources
-resources/bundle.h
-resources/bundle.c
-resources/*.bin
-
-# Temporary or backup files
+# Logs dan database
 *.log
-*.tmp
-*.bak
-*.swp
-*.swo
-*.orig
-*.rej
-*~
-*.out
+*.sqlite
+*.db
 
-# Themes or config cache
-themes/*.tmp
-themes/*.bak
+# Environment variables
+.env
+.env.local
 
-# OS-specific
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Editor & IDE configs
+# IDE files
 .vscode/
 .idea/
-.cache/
-.history/
+*.swp
+*.swo
+*~
 
-# Shell or utility scripts cache
-*.sh~
-*.cmd~
-scripts/*.log
-scripts/*.tmp
+# OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Docs build or export artifacts
-docs/*.html
-docs/*.pdf
-docs/*.tmp
-docs/*.bak
-
-# Optional test output
-/tests/*.gcda
-/tests/*.gcno
-/tests/*.gcov
-/tests/*.log
-
-# Backup & misc
-__pycache__/
+# Bahasa pemrograman spesifik
+__pycache__/   # Python cache
 *.pyc
+node_modules/  # Node.js dependencies
+.pytest_cache/ # Python pytest cache
+*.tsbuildinfo # TypeScript build info
+
+# Profiling data
+*.prof
+*.aux
+*.out

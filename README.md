@@ -41,7 +41,7 @@ Follow these steps to build and install Lex on your system:
 | 3. Enter Build Directory | `cd build` | Navigate into the build directory |
 | 4. Configure Project | `cmake ..` | Generate makefiles and create `install_manifest.txt` |
 | 5. Compile | `make -j$(nproc)` | Compile the source code using all available CPU cores |
-| 6. Install System-wide | `sudo make install` | Copy the executable to system directory (e.g., `/usr/local/bin`). Requires root access |
+| 6. Install System-wide | `sudo make install .` | Copy the executable to system directory (e.g., `/usr/local/bin`). Requires root access |
 
 **Quick Installation (One-liner):**
 

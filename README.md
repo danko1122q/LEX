@@ -81,6 +81,7 @@ The purge target provides a comprehensive cleanup. It first runs the uninstall t
 ```bash
 cd /path/to/LEX/build
 make purge
+cd ..
 ```
 
 **Note:** After running purge, the build directory will be completely removed. You will need to start the installation process from the beginning if you want to reinstall the project.

@@ -170,7 +170,7 @@ sudo dnf install gcc              # Fedora/RHEL
 **install_manifest.txt not found:** This file is created during installation. If it's missing, you may need to manually remove the executable:
 
 ```bash
-sudo rm /usr/local/bin/LEX
+sudo rm /usr/local/bin/lex
 ```
 
 **Permission denied:** Remember to use `sudo` for uninstall operations

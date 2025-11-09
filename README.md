@@ -91,6 +91,7 @@ cd ..
 Run Lex from your terminal:
 
 ```bash
+lex -v [version]
 lex [filename]
 ```
 

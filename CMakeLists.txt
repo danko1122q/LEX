@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(lex VERSION 0.5.2 LANGUAGES C)
 
-# Sertakan direktori instalasi standar GNU (bin, lib, share, dll.)
+# Include standard GNU installation directories (bin, lib, share, etc.)
 include(GNUInstallDirs)
 
 set(CMAKE_C_STANDARD 11)
@@ -35,8 +35,8 @@ set(BUNDLER_SOURCE "${RESOURCE_DIR}/bundler.c")
 add_executable(bundler ${BUNDLER_SOURCE})
 set(BUNDLED_FILE "${RESOURCE_DIR}/bundle.h")
 
-# PERBAIKAN: Gunakan generator expression untuk path bundler yang benar
-# dan tambahkan BYPRODUCTS agar bundle.h selalu ter-regenerate
+# FIX: Use generator expression for correct bundler path
+# and add BYPRODUCTS to ensure bundle.h is always regenerated
 add_custom_command(
     OUTPUT ${BUNDLED_FILE}
     COMMAND $<TARGET_FILE:bundler> ${BUNDLED_FILE} ${SYNTAX_FILES}
@@ -46,7 +46,7 @@ add_custom_command(
     BYPRODUCTS ${BUNDLED_FILE}
 )
 
-# Buat custom target untuk memastikan bundle.h selalu diupdate
+# Create custom target to ensure bundle.h is always updated
 add_custom_target(generate_bundle ALL
     DEPENDS ${BUNDLED_FILE}
 )
@@ -84,7 +84,7 @@ endif()
 
 add_executable(${PROJECT_NAME} ${CORE_SOURCES} ${BUNDLED_FILE})
 
-# Pastikan lex bergantung pada generate_bundle
+# Ensure lex depends on generate_bundle
 add_dependencies(${PROJECT_NAME} generate_bundle)
 
 # ------------------------------------------------------------------------------
@@ -113,31 +113,33 @@ endif()
 # ------------------------------------------------------------------------------
 # Installation Rules
 # ------------------------------------------------------------------------------
-# Instalasi eksplisit ke direktori bin yang benar (sistem-wide)
-# Ini akan menginstal binary 'lex' ke /usr/local/bin (atau setara)
+# Explicit installation to correct bin directory (system-wide)
+# This will install the 'lex' binary to /usr/local/bin (or equivalent)
 install(TARGETS ${PROJECT_NAME}
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT runtime
 )
 
+# Display actual installation path for easier debugging
+message(STATUS "Binary will be installed to: ${CMAKE_INSTALL_FULL_BINDIR}/${PROJECT_NAME}")
+
 # ------------------------------------------------------------------------------
-# Custom Targets: UNINSTALL dan PURGE
+# Custom Targets: UNINSTALL and PURGE
 # ------------------------------------------------------------------------------
 
-# Target UNINSTALL yang lebih robust
-# CMake secara otomatis membuat file install_manifest.txt saat 'make install' dijalankan.
-# Kita menggunakan file ini sebagai dasar untuk menghapus instalasi.
+# More robust and accurate UNINSTALL target
 if(NOT TARGET uninstall)
-    # Tentukan lokasi pasti dari file manifest di dalam direktori build.
+    # Determine exact location of manifest file within build directory
     set(CMAKE_INSTALL_MANIFEST_FILE "${CMAKE_CURRENT_BINARY_DIR}/install_manifest.txt")
     
-    # Konfigurasi template 'uninstall.cmake.in' menjadi skrip 'uninstall.cmake' yang bisa dijalankan.
+    # Configure 'uninstall.cmake.in' template into executable 'uninstall.cmake' script
     configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/uninstall.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake"
         @ONLY
     )
     
-    # Tambahkan target 'uninstall' yang menjalankan skrip tersebut.
+    # Add 'uninstall' target that runs the script
     add_custom_target(uninstall
         COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/uninstall.cmake"
         USES_TERMINAL
@@ -146,16 +148,62 @@ if(NOT TARGET uninstall)
     message(STATUS "Uninstall target created. Run 'sudo make uninstall' to remove installed files.")
 endif()
 
-# Target PURGE yang lebih baik
-# Target 'purge' sekarang akan menjalankan 'uninstall' terlebih dahulu, sebelum menghapus
-# seluruh direktori build. Ini memastikan pembersihan yang menyeluruh.
+# FORCE_UNINSTALL target - Explicitly removes binary (without install_manifest.txt)
+# This target is useful if install_manifest.txt is missing or corrupted
+add_custom_target(force-uninstall
+    COMMAND ${CMAKE_COMMAND} -E echo "Force removing binary from install location..."
+    COMMAND ${CMAKE_COMMAND} -E remove -f "${CMAKE_INSTALL_FULL_BINDIR}/${PROJECT_NAME}"
+    COMMAND ${CMAKE_COMMAND} -E echo "Checking common installation paths..."
+    COMMAND bash -c "sudo rm -f /usr/local/bin/${PROJECT_NAME} || true"
+    COMMAND bash -c "sudo rm -f /usr/bin/${PROJECT_NAME} || true"
+    COMMAND bash -c "sudo rm -f ${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME} || true"
+    COMMAND ${CMAKE_COMMAND} -E echo "Force uninstall complete. Binary '${PROJECT_NAME}' removed from common paths."
+    USES_TERMINAL
+    COMMENT "Force removing ${PROJECT_NAME} from all common install locations..."
+)
+message(STATUS "Force-uninstall target created. Run 'sudo make force-uninstall' to forcefully remove the binary.")
+
+# FIXED: CHECK_INSTALL target - Fixed quoting and error handling
+add_custom_target(check-install
+    COMMAND ${CMAKE_COMMAND} -E echo "Checking for installed '${PROJECT_NAME}' binary..."
+    COMMAND bash -c "which '${PROJECT_NAME}' >/dev/null 2>&1 && echo 'Found in PATH: $(which ${PROJECT_NAME})' || echo 'Binary not found in PATH'"
+    COMMAND bash -c "[ -f '/usr/local/bin/${PROJECT_NAME}' ] && echo 'Found in /usr/local/bin' || echo 'Not in /usr/local/bin'"
+    COMMAND bash -c "[ -f '/usr/bin/${PROJECT_NAME}' ] && echo 'Found in /usr/bin' || echo 'Not in /usr/bin'"
+    COMMAND bash -c "[ -f '${CMAKE_INSTALL_FULL_BINDIR}/${PROJECT_NAME}' ] && echo 'Found in ${CMAKE_INSTALL_FULL_BINDIR}' || echo 'Not in ${CMAKE_INSTALL_FULL_BINDIR}'"
+    COMMAND ${CMAKE_COMMAND} -E echo "Note: Run 'sudo make install' to install the binary to system"
+    USES_TERMINAL
+    COMMENT "Checking installation locations for ${PROJECT_NAME}..."
+)
+message(STATUS "Check-install target created. Run 'make check-install' to verify installation.")
+
+# Improved PURGE target
+# The 'purge' target will run 'uninstall' first, before deleting
+# the entire build directory. This ensures thorough cleanup.
 add_custom_target(purge
     COMMENT "Purging build directory after uninstalling..."
 )
-# Buat 'purge' bergantung pada 'uninstall'
+# Make 'purge' depend on 'uninstall'
 add_dependencies(purge uninstall)
-# Perintah untuk menghapus direktori build dijalankan setelah dependensi selesai
+# Command to delete build directory runs after dependencies complete
 add_custom_command(TARGET purge POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_CURRENT_BINARY_DIR}
 )
 message(STATUS "Purge target created. Run 'make purge' to uninstall and delete the entire build directory.")
+
+# ------------------------------------------------------------------------------
+# Build and Install Information
+# ------------------------------------------------------------------------------
+message(STATUS "")
+message(STATUS "=== Build Configuration ===")
+message(STATUS "Project: ${PROJECT_NAME} v${CMAKE_PROJECT_VERSION}")
+message(STATUS "Install prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Binary install dir: ${CMAKE_INSTALL_FULL_BINDIR}")
+message(STATUS "")
+message(STATUS "=== Available Targets ===")
+message(STATUS "  make              - Build the project")
+message(STATUS "  sudo make install - Install to ${CMAKE_INSTALL_FULL_BINDIR}")
+message(STATUS "  make check-install - Check where binary is installed")
+message(STATUS "  sudo make uninstall - Remove installed files (requires install_manifest.txt)")
+message(STATUS "  sudo make force-uninstall - Force remove binary from common paths")
+message(STATUS "  make purge        - Uninstall and delete build directory")
+message(STATUS "==========================")

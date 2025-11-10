@@ -1,22 +1,117 @@
-# uninstall.cmake.in - Template untuk skrip uninstalasi CMake
-#
-# File ini akan dikonfigurasi oleh CMake untuk menghasilkan 'uninstall.cmake'
-# di direktori build. Skrip ini membaca 'install_manifest.txt' yang berisi
-# daftar semua file yang telah diinstal oleh 'make install'.
+# Robust CMake Uninstall Script
+# This file is generated from uninstall.cmake.in
 
-# Periksa apakah file manifest ada. Jika tidak, hentikan dengan pesan kesalahan.
+# Ensure manifest file exists
 if(NOT EXISTS "@CMAKE_INSTALL_MANIFEST_FILE@")
-  message(FATAL_ERROR "Cannot find install manifest: \"@CMAKE_INSTALL_MANIFEST_FILE@\"")
+    message(WARNING "Cannot find install manifest: @CMAKE_INSTALL_MANIFEST_FILE@")
+    message(STATUS "Attempting to remove binary from known install locations...")
+    
+    # List all possible locations
+    set(POSSIBLE_LOCATIONS
+        "@CMAKE_INSTALL_FULL_BINDIR@/@PROJECT_NAME@"
+        "/usr/local/bin/@PROJECT_NAME@"
+        "/usr/bin/@PROJECT_NAME@"
+        "${CMAKE_INSTALL_PREFIX}/bin/@PROJECT_NAME@"
+    )
+    
+    set(FOUND_ANY FALSE)
+    foreach(location ${POSSIBLE_LOCATIONS})
+        if(EXISTS "${location}")
+            message(STATUS "Removing: ${location}")
+            execute_process(
+                COMMAND ${CMAKE_COMMAND} -E remove "${location}"
+                RESULT_VARIABLE result
+            )
+            if(result EQUAL 0)
+                message(STATUS "  ✓ Removed successfully")
+                set(FOUND_ANY TRUE)
+            else()
+                message(WARNING "  ✗ Failed to remove (may need sudo)")
+            endif()
+        endif()
+    endforeach()
+    
+    if(NOT FOUND_ANY)
+        message(STATUS "No installed files found in common locations.")
+        message(STATUS "If the binary still exists elsewhere, try:")
+        message(STATUS "  sudo make force-uninstall")
+    endif()
+    
+    return()
 endif()
 
-# Baca semua baris (nama file) dari file manifest ke dalam variabel 'files'.
-file(STRINGS "@CMAKE_INSTALL_MANIFEST_FILE@" files)
+# Read manifest file and remove each installed file
+file(READ "@CMAKE_INSTALL_MANIFEST_FILE@" files)
+string(REGEX REPLACE "\n" ";" files "${files}")
 
-# Loop melalui setiap file dan hapus.
+set(SUCCESS_COUNT 0)
+set(FAILURE_COUNT 0)
+set(MISSING_COUNT 0)
+
 foreach(file ${files})
-  message(STATUS "Removing: ${file}")
-  # Hanya coba menghapus jika file atau symlink benar-benar ada.
-  if(IS_SYMLINK "${file}" OR EXISTS "${file}")
-    file(REMOVE ${file})
-  endif()
+    message(STATUS "Uninstalling: ${file}")
+    
+    if(NOT EXISTS "${file}")
+        message(STATUS "  - File not found (already removed?)")
+        math(EXPR MISSING_COUNT "${MISSING_COUNT} + 1")
+        continue()
+    endif()
+    
+    # Try to remove file
+    execute_process(
+        COMMAND ${CMAKE_COMMAND} -E remove "${file}"
+        RESULT_VARIABLE result
+        OUTPUT_QUIET
+        ERROR_QUIET
+    )
+    
+    # Verify if file was actually removed
+    if(EXISTS "${file}")
+        message(WARNING "  ✗ Failed to remove (may need sudo)")
+        math(EXPR FAILURE_COUNT "${FAILURE_COUNT} + 1")
+    else()
+        message(STATUS "  ✓ Removed successfully")
+        math(EXPR SUCCESS_COUNT "${SUCCESS_COUNT} + 1")
+    endif()
 endforeach()
+
+# Results report
+message(STATUS "")
+message(STATUS "=== Uninstall Summary ===")
+message(STATUS "Successfully removed: ${SUCCESS_COUNT} file(s)")
+if(MISSING_COUNT GREATER 0)
+    message(STATUS "Already missing: ${MISSING_COUNT} file(s)")
+endif()
+if(FAILURE_COUNT GREATER 0)
+    message(WARNING "Failed to remove: ${FAILURE_COUNT} file(s)")
+    message(WARNING "You may need to run with sudo:")
+    message(WARNING "  sudo make uninstall")
+endif()
+message(STATUS "========================")
+
+# Also try to remove binary from common locations (backup)
+message(STATUS "")
+message(STATUS "Double-checking common install locations...")
+set(BACKUP_LOCATIONS
+    "/usr/local/bin/@PROJECT_NAME@"
+    "/usr/bin/@PROJECT_NAME@"
+)
+
+foreach(location ${BACKUP_LOCATIONS})
+    if(EXISTS "${location}")
+        message(STATUS "Found binary at: ${location}")
+        execute_process(
+            COMMAND ${CMAKE_COMMAND} -E remove "${location}"
+            RESULT_VARIABLE result
+            OUTPUT_QUIET
+            ERROR_QUIET
+        )
+        if(NOT EXISTS "${location}")
+            message(STATUS "  ✓ Removed successfully")
+        else()
+            message(WARNING "  ✗ Failed to remove (need sudo)")
+        endif()
+    endif()
+endforeach()
+
+message(STATUS "Uninstall complete!")

@@ -54,8 +54,8 @@ If method 1 fails:
 ```bash
 cd build
 sudo make force-uninstall
-rm -rf build
 cd ..
+rm -rf build
 ```
 
 Removes binary from:
